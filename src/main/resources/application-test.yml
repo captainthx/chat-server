@@ -1,0 +1,102 @@
+server:
+  shutdown: graceful
+  port: 8080
+
+spring:
+  application:
+    name: Spring API
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/spring?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 1234
+  jpa:
+    show-sql: false
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: username
+    password: password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    locations: classpath:db/migration
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 12MB
+  jackson:
+    time-zone: UTC
+  cache:
+    redis:
+      time-to-live: 1m
+
+springdoc:
+  swagger-ui:
+    path: /docs
+    disable-swagger-default-url: true
+    display-request-duration: true
+    default-models-expand-depth: -1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  info:
+    env:
+      enabled: true
+
+info:
+  application:
+    name: ${spring.application.name}
+    version: @project.version@
+
+api:
+  cors:
+    allowed-origins: "*"
+  server:
+    name: ${spring.application.name}
+    url: http://localhost:${server.port}
+    env: test
+    version: @project.version@
+  email:
+    template:
+      verification: email/email-verification.html
+      forgot-password: email/email-forgot-password.html
+
+  jwt:
+    issuer: ${api.server.url}
+    public-key: classpath:jwt/public-key.pub
+    private-key: classpath:jwt/private-key.key
+    expiration:
+      access-token: 365d
+      refresh-token: 366d
+  files:
+    directory: files
+    supported-types: image/jpeg, image/png, image/webp
+    base-url: ${api.server.url}/v1/files/
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    com.natsukashiiz.spring: DEBUG

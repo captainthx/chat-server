@@ -1,0 +1,21 @@
+services:
+  spring-mysql:
+    image: 'biarms/mysql:5.7'
+    environment:
+      - 'MYSQL_DATABASE=spring'
+      - 'MYSQL_ROOT_PASSWORD=1234'
+    ports:
+      - '3306:3306'
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    networks:
+      - spring-network
+
+  spring-redis:
+    image: 'redis:6.0.9'
+    ports:
+      - '6379:6379'
+    networks:
+      - spring-network
+
+networks:
+  spring-network:
