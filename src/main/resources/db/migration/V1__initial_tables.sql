@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS `users`
     `username`  VARCHAR(30),
     `email`     VARCHAR(255),
     `password`  VARCHAR(255),
-    `phone`     VARCHAR(10),
     `status`    VARCHAR(255),
     `verified`  TINYINT               DEFAULT 0,
     `avatar_id` BIGINT,
@@ -57,33 +56,32 @@ CREATE TABLE IF NOT EXISTS `chat_rooms`
 ) engine = InnoDB;
 
 
-CREATE TABLE IF NOT EXISTS `conversation_participants` (
+CREATE TABLE IF NOT EXISTS `room_members` (
     `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `room_id` BIGINT NOT NULL,
     `user_id` BIGINT NOT NULL,
     `role` VARCHAR(20) NOT NULL, -- 'ADMIN', 'MEMBER', 'FRIEND'
-    `status` VARCHAR(20) NOT NULL DEFAULT 'ACTIVE', -- 'ACTIVE', 'REMOVED', 'LEFT'
     `version` INT NOT NULL DEFAULT 0,
     `cdt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `udt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT `conv_participants_room_id_fk` FOREIGN KEY (`room_id`) REFERENCES `chat_rooms` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `conv_participants_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `conv_participants_unique` UNIQUE (`room_id`, `user_id`)
+    CONSTRAINT `room_members_room_id_fk` FOREIGN KEY (`room_id`) REFERENCES `chat_rooms` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `room_members_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `room_members_unique` UNIQUE (`room_id`, `user_id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `conversation_invitations`
+CREATE TABLE IF NOT EXISTS `invitations`
 (
     `id`        BIGINT AUTO_INCREMENT PRIMARY KEY,
     `sender_id` BIGINT,
     `recipient_id`   BIGINT,
     `room_id`   BIGINT,
-    `status`    VARCHAR(255),
+    `status`    VARCHAR(255) NOT NULL DEFAULT 'PENDING',-- PENDING, ACCEPT, REJECT
     `version`   INT          NOT NULL DEFAULT 0,
     `cdt`       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `udt`       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT `conv_invitations_sender_id_fk` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `conv_invitations_recipient_id_fk` FOREIGN KEY (`recipient_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `conv_invitations_room_id_fk` FOREIGN key (`room_id`) REFERENCES `chat_rooms` (`id`) ON DELETE CASCADE
+    CONSTRAINT `invitations_sender_id_fk` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `invitations_recipient_id_fk` FOREIGN KEY (`recipient_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `invitations_room_id_fk` FOREIGN key (`room_id`) REFERENCES `chat_rooms` (`id`) ON DELETE CASCADE
 ) engine = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `send_message`
@@ -93,8 +91,8 @@ CREATE TABLE IF NOT EXISTS `send_message`
     `sender_id` BIGINT NOT NULL,
     `reply_to_id` BIGINT ,
     `message`   TEXT NOT NULL,
-    `status`    VARCHAR(255) NOT NULL,
-    `type`    VARCHAR(255) NOT NULL, -- text , file
+    `status`    VARCHAR(255) NOT NULL, -- READ,UNREAD
+    `type`    VARCHAR(255) NOT NULL, -- TEXT , FILE
     `attachment_id` BIGINT, -- for type file
     `version`   INT          NOT NULL DEFAULT 0,
     `cdt`       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
