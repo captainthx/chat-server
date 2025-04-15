@@ -10,8 +10,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "conversation_invitations")
-public class ConversationInvitations extends BaseEntity {
+@Table(name = "invitations")
+public class Invitations extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "sender_id")
@@ -26,5 +26,5 @@ public class ConversationInvitations extends BaseEntity {
     private ChatRooms room;
 
     @Column(name = "status")
-    private String status;
+    private String status; // 'PENDING', 'ACCEPT' ,'REJECT'
 }

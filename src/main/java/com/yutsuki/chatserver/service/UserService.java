@@ -28,4 +28,11 @@ public class UserService {
                     return e;
                 });
     }
+
+    public  User getUserByUsername(String username) throws BaseException{
+        return userRepository.findByUsername(username).orElseThrow(() -> {
+            log.warn("GetUserByUsername-[block]:(not found). username: {}", username);
+            return AuthException.userNotFound();
+        });
+    }
 }

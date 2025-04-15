@@ -39,7 +39,7 @@ public class ChatRooms extends BaseEntity {
     private File image;
 
     @OneToMany(mappedBy = "room")
-    private List<ConversationParticipant> conversationParticipants;
+    private List<RoomMembers> roomMembers;
 
 
 }

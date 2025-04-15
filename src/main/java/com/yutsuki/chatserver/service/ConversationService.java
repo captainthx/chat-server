@@ -1,10 +1,26 @@
 package com.yutsuki.chatserver.service;
 
-import com.yutsuki.chatserver.repository.ConversationRequestRepository;
+import com.yutsuki.chatserver.entity.Invitations;
+import com.yutsuki.chatserver.entity.User;
+import com.yutsuki.chatserver.enums.InvitationStatus;
+import com.yutsuki.chatserver.exception.BaseException;
+import com.yutsuki.chatserver.model.Result;
+import com.yutsuki.chatserver.model.request.AddNewFriendRequest;
+import com.yutsuki.chatserver.model.request.GetInvitationRequest;
+import com.yutsuki.chatserver.model.request.PaginationRequest;
+import com.yutsuki.chatserver.model.request.SearchFriendRequest;
+import com.yutsuki.chatserver.model.response.AccountResponse;
+import com.yutsuki.chatserver.model.response.InvitationsResponse;
+import com.yutsuki.chatserver.repository.InvitationsRepository;
+import com.yutsuki.chatserver.repository.RoomMembersRepository;
+import com.yutsuki.chatserver.utils.ResultUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Log4j2
@@ -12,5 +28,44 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class ConversationService {
 
-    private final ConversationRequestRepository conversationRequestRepository;
+    private final InvitationsRepository invitationsRepository;
+    private final UserService userService;
+
+
+    public Result<Void> addFriend(AddNewFriendRequest request, User user) throws BaseException{
+        var friend = userService.getUserById(request.getFriendId());
+        var invitation = new Invitations();
+        invitation.setSender(user);
+        invitation.setRecipient(friend);
+        invitation.setStatus(InvitationStatus.PENDING.name());
+        invitationsRepository.save(invitation);
+        return ResultUtils.successWithMessage("send invitation success.");
+    }
+
+
+    public Result<AccountResponse> searchFriend(SearchFriendRequest request) throws BaseException{
+        var user = userService.getUserByUsername(request.getUsername());
+        var response = AccountResponse.fromEntity(user);
+        return ResultUtils.success(response);
+    }
+
+    public Result<List<InvitationsResponse>> getInvitationsList(GetInvitationRequest request, User user) throws BaseException{
+        var search = new Invitations();
+        search.setRecipient(user);
+        search.setStatus(request.getStatus());
+
+        var matcher = ExampleMatcher.matchingAny()
+                .withIgnoreNullValues()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.STARTING);
+        var invitationsExample = Example.of(search, matcher);
+
+        var pagination = PageRequest.of(request.getSize(), request.getPage(),Sort.by(Sort.Direction.DESC,"id"));
+        var page = invitationsRepository.findAll(invitationsExample, pagination);
+
+        var responses = page.map(InvitationsResponse::fromEntity).toList();
+        return ResultUtils.successList(responses,page.getTotalElements());
+    }
+
+
 }

@@ -30,11 +30,8 @@ public class User extends BaseEntity {
     @Column(name="password")
     private String password;
 
-    @Column(name = "phone",length = 10)
-    private String phone;
-
     @Column(name="status")
-    private String status;
+    private String status; // 'ACTIVE','REMOVE','LEFT'
 
     @OneToOne
     @OnDelete(action = OnDeleteAction.SET_NULL)
@@ -44,9 +41,9 @@ public class User extends BaseEntity {
     private Boolean verified;
 
     @OneToMany(mappedBy = "user")
-    private List<ConversationParticipant> conversations;
+    private List<RoomMembers> conversations;
 
     @OneToMany(mappedBy = "recipient")
-    private List<ConversationInvitations> receivedInvitations;
+    private List<Invitations> receivedInvitations;
 
 }

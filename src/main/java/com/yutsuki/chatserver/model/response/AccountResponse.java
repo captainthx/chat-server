@@ -16,18 +16,20 @@ public class AccountResponse implements Serializable {
     private String email;
     private String avatar;
     private Boolean verified;
+    private String status;
+
 
     public static AccountResponse fromEntity(User user) {
         AccountResponse response = new AccountResponse();
         response.setId(user.getId());
         response.setUsername(user.getUsername());
         response.setEmail(user.getEmail());
+        response.setStatus(user.getStatus());
         response.setVerified(user.getVerified());
 
         if (Objects.nonNull(user.getAvatar())) {
             response.setAvatar(user.getAvatar().getUrl());
         }
-
         return response;
     }
 }

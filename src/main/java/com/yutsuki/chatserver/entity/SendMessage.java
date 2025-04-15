@@ -20,16 +20,16 @@ public class SendMessage extends BaseEntity {
     private User sender;
 
     @Column(name = "status")
-    private String status;
+    private String status; // 'READ','UNREAD'
 
     @Column(name = "message",columnDefinition = "TEXT")
     private String message;
 
     @Column(name = "type")
-    private String type;
+    private String type; // 'FILE','TEXT'
 
     @ManyToOne
-    @JoinColumn(name = "file_id")
+    @JoinColumn(name = "attachment_id")
     private File attachment;
 
     @ManyToOne
