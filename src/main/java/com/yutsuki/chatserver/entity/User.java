@@ -44,9 +44,9 @@ public class User extends BaseEntity {
     private Boolean verified;
 
     @OneToMany(mappedBy = "user")
-    private List<Conversation> conversations;
+    private List<ConversationParticipant> conversations;
 
-    @OneToMany(mappedBy = "toUser")
-    private List<ConversationRequest> receivedRequests;
+    @OneToMany(mappedBy = "recipient")
+    private List<ConversationInvitations> receivedInvitations;
 
 }

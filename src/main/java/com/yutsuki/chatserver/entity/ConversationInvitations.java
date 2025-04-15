@@ -10,16 +10,16 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "conversation_request")
-public class ConversationRequest extends BaseEntity {
+@Table(name = "conversation_invitations")
+public class ConversationInvitations extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(name = "form_user")
-    private User formUser;
+    @JoinColumn(name = "sender_id")
+    private User sender;
 
     @ManyToOne
-    @JoinColumn(name = "to_user")
-    private User toUser;
+    @JoinColumn(name = "recipient_id")
+    private User recipient;
 
     @ManyToOne
     @JoinColumn(name = "room_id")

@@ -2,7 +2,6 @@ package com.yutsuki.chatserver.service;
 
 
 import com.yutsuki.chatserver.entity.User;
-import com.yutsuki.chatserver.enums.UserRole;
 import com.yutsuki.chatserver.exception.AuthException;
 import com.yutsuki.chatserver.exception.BaseException;
 import com.yutsuki.chatserver.exception.UserException;

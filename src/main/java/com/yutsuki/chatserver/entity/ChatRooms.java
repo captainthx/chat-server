@@ -8,6 +8,8 @@ import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -15,14 +17,29 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "chat_rooms")
 public class ChatRooms extends BaseEntity {
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "title")
+    private String title;
 
     @Column(name = "type")
     private String type;
 
     @OneToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "creator_id")
+    private User creator;
+
+    @OneToOne
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @JoinColumn(name = "last_message_id")
+    private SendMessage lastMessage;
+
+    @OneToOne
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "image_id")
     private File image;
+
+    @OneToMany(mappedBy = "room")
+    private List<ConversationParticipant> conversationParticipants;
+
+
 }

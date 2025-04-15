@@ -16,16 +16,24 @@ public class SendMessage extends BaseEntity {
     private ChatRooms room;
 
     @ManyToOne
-    @JoinColumn(name = "form_user")
-    private User fromUser;
+    @JoinColumn(name = "sender_id")
+    private User sender;
 
     @Column(name = "status")
     private String status;
 
-    @Column(name = "message")
+    @Column(name = "message",columnDefinition = "TEXT")
     private String message;
 
     @Column(name = "type")
     private String type;
+
+    @ManyToOne
+    @JoinColumn(name = "file_id")
+    private File attachment;
+
+    @ManyToOne
+    @JoinColumn(name = "reply_to_id")
+    private SendMessage replyTo;
 
 }

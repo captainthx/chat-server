@@ -199,6 +199,7 @@ public class FileService {
         fileRepository.findByIdAndUser(id, user).ifPresent(this::delete);
     }
 
+
     public void deleteById(Long id) {
         fileRepository.findById(id).ifPresent(this::delete);
     }
@@ -207,6 +208,16 @@ public class FileService {
         Optional<File> fileOptional = fileRepository.findByUrlAndUser(url, user);
         if (fileOptional.isEmpty()) {
             log.warn("GetByUrlAndUser-[block]:(file not found) url:{}, userId:{}", url, user.getId());
+            throw FileException.notFound();
+        }
+        return fileOptional.get();
+    }
+
+
+    public File getByUrl(String url) throws BaseException {
+        var fileOptional = fileRepository.findByUrl(url);
+        if (fileOptional.isEmpty()) {
+            log.warn("GetByUrl-[block]:(file not found) url:{}", url);
             throw FileException.notFound();
         }
         return fileOptional.get();
