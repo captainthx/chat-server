@@ -7,4 +7,7 @@ public class ConversationException extends BaseException {
     }
 
 
+    public static BaseException UnableAddMyself() {
+        return new ConversationException("unable.addMyself");
+    }
 }

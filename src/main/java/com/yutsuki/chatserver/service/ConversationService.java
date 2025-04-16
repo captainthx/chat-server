@@ -4,6 +4,7 @@ import com.yutsuki.chatserver.entity.Invitations;
 import com.yutsuki.chatserver.entity.User;
 import com.yutsuki.chatserver.enums.InvitationStatus;
 import com.yutsuki.chatserver.exception.BaseException;
+import com.yutsuki.chatserver.exception.ConversationException;
 import com.yutsuki.chatserver.model.Result;
 import com.yutsuki.chatserver.model.request.AddNewFriendRequest;
 import com.yutsuki.chatserver.model.request.GetInvitationRequest;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Log4j2
@@ -33,6 +35,10 @@ public class ConversationService {
 
     public Result<Void> addFriend(AddNewFriendRequest request, User user) throws BaseException{
         var friend = userService.getUserById(request.getFriendId());
+        if (Objects.equals(friend.getId(),user.getId())){
+            log.warn("AddFriend-[block].(Unable to add myself). request:{}",request);
+            throw ConversationException.UnableAddMyself();
+        }
         var invitation = new Invitations();
         invitation.setSender(user);
         invitation.setRecipient(friend);
