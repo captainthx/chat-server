@@ -6,6 +6,7 @@ import com.yutsuki.chatserver.model.Result;
 import com.yutsuki.chatserver.model.request.AddNewFriendRequest;
 import com.yutsuki.chatserver.model.request.GetInvitationRequest;
 import com.yutsuki.chatserver.model.request.SearchFriendRequest;
+import com.yutsuki.chatserver.model.request.UpdInvitationRequest;
 import com.yutsuki.chatserver.model.response.AccountResponse;
 import com.yutsuki.chatserver.model.response.InvitationsResponse;
 import com.yutsuki.chatserver.service.AuthService;
@@ -47,5 +48,11 @@ public class ConversationController {
         return conversationService.addFriend(request, authService.getUser());
     }
 
+
+    @Operation(summary = "Update invitation")
+    @PutMapping("/update-invitation")
+    public Result<Void> updateInvitation(@RequestBody @Valid UpdInvitationRequest request) throws BaseException {
+        return conversationService.updateInvitation(request, authService.getUser());
+    }
 
 }

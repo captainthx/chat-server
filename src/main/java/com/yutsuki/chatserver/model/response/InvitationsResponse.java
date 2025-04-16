@@ -12,7 +12,7 @@ import java.util.Objects;
 @Getter
 @Setter
 public class InvitationsResponse implements Serializable {
-
+    private Long id;
     private AccountResponse sender;
     private String status;
     private Long roomId;
@@ -20,8 +20,8 @@ public class InvitationsResponse implements Serializable {
 
     public static InvitationsResponse fromEntity(Invitations invitation) {
         InvitationsResponse response = new InvitationsResponse();
+        response.setId(invitation.getId());
         response.setSender(AccountResponse.fromEntity(invitation.getSender()));
-
         if(Objects.nonNull(invitation.getRoom())){
             response.setRoomId(invitation.getRoom().getId());
         }

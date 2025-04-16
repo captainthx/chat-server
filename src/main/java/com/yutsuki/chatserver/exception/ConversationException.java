@@ -10,4 +10,13 @@ public class ConversationException extends BaseException {
     public static BaseException UnableAddMyself() {
         return new ConversationException("unable.addMyself");
     }
+
+    public static ConversationException InvitationNotFound() {
+        return new ConversationException("invitation.notFound");
+    }
+
+    public static ConversationException InvitationInValid() {
+        return new ConversationException("invitation.invalid");
+    }
+
 }
