@@ -7,17 +7,16 @@ import com.yutsuki.chatserver.exception.BaseException;
 import com.yutsuki.chatserver.model.Result;
 import com.yutsuki.chatserver.model.request.AddNewFriendRequest;
 import com.yutsuki.chatserver.model.request.GetInvitationRequest;
-import com.yutsuki.chatserver.model.request.PaginationRequest;
 import com.yutsuki.chatserver.model.request.SearchFriendRequest;
 import com.yutsuki.chatserver.model.response.AccountResponse;
 import com.yutsuki.chatserver.model.response.InvitationsResponse;
 import com.yutsuki.chatserver.repository.InvitationsRepository;
-import com.yutsuki.chatserver.repository.RoomMembersRepository;
 import com.yutsuki.chatserver.utils.ResultUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,16 +53,16 @@ public class ConversationService {
         search.setRecipient(user);
         search.setStatus(request.getStatus());
 
-        var matcher = ExampleMatcher.matchingAny()
+        var matcher = ExampleMatcher.matchingAll()
                 .withIgnoreNullValues()
                 .withIgnoreCase()
-                .withStringMatcher(ExampleMatcher.StringMatcher.STARTING);
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         var invitationsExample = Example.of(search, matcher);
 
-        var pagination = PageRequest.of(request.getSize(), request.getPage(),Sort.by(Sort.Direction.DESC,"id"));
+        var pagination = request.pagination();
         var page = invitationsRepository.findAll(invitationsExample, pagination);
 
-        var responses = page.map(InvitationsResponse::fromEntity).toList();
+        var responses = page.getContent().stream().map(InvitationsResponse::fromEntity).toList();
         return ResultUtils.successList(responses,page.getTotalElements());
     }
 

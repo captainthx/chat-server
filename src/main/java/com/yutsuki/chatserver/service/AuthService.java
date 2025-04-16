@@ -224,10 +224,10 @@ public class AuthService {
 
         User user = userOptional.get();
 
-        if (!user.getVerified()) {
-            log.warn("GetUser-[block]:(email not verified). userId:{}", userId);
-            throw AuthException.unauthorized();
-        }
+//        if (!user.getVerified()) {
+//            log.warn("GetUser-[block]:(email not verified). userId:{}", userId);
+//            throw AuthException.unauthorized();
+//        }
 
         return user;
     }

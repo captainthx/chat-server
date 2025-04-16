@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -20,7 +21,10 @@ public class InvitationsResponse implements Serializable {
     public static InvitationsResponse fromEntity(Invitations invitation) {
         InvitationsResponse response = new InvitationsResponse();
         response.setSender(AccountResponse.fromEntity(invitation.getSender()));
-        response.setRoomId(invitation.getRoom().getId());
+
+        if(Objects.nonNull(invitation.getRoom())){
+            response.setRoomId(invitation.getRoom().getId());
+        }
         response.setStatus(invitation.getStatus());
         response.setCdt(invitation.getCdt());
         return response;

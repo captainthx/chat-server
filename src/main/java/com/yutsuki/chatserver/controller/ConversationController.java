@@ -37,7 +37,7 @@ public class ConversationController {
 
     @Operation(summary = "Get invitation list")
     @GetMapping("/invitation")
-    public Result<List<InvitationsResponse>> getInvitationList(@ParameterObject @RequestParam GetInvitationRequest request) throws BaseException {
+    public Result<List<InvitationsResponse>> getInvitationList(@ParameterObject GetInvitationRequest request) throws BaseException {
         return conversationService.getInvitationsList(request, authService.getUser());
     }
 
