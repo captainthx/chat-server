@@ -32,10 +32,6 @@ public class MessageService {
     private final RoomMembersRepository roomMembersRepository;
 
     public void sendMessageToDirectRoom(User recipient, ChatRooms room, SendMessage sendMessage) {
-        // update last message
-        room.setLastMessage(sendMessage);
-        chatRoomsRepository.save(room);
-
         // create payload data for websocket
         var payload = SendMessagePayload.builder()
                 .roomId(room.getId())
@@ -61,10 +57,6 @@ public class MessageService {
         var rooms = roomMembersRepository.findByRoomId(room.getId());
         var userIds = rooms.stream().map(e -> e.getUser().getId()).toList();
         log.info("send to group room userIds {}", userIds);
-
-        // update last message
-        room.setLastMessage(sendMessage);
-        chatRoomsRepository.save(room);
 
         // create payload data for websocket
         var payload = SendMessagePayload.builder()

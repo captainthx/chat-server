@@ -7,4 +7,6 @@ public interface ChatRoomsRepository extends JpaRepository<ChatRooms, Long> {
 
    boolean existsByTitle(String title);
 
+
+
 }

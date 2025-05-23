@@ -77,9 +77,6 @@ public class ChatRoomService {
         return ResultUtils.success();
     }
 
-
-
-
     public ChatRooms getChatRoomById(Long chatRoomId) throws BaseException {
         var chatRoomsOptional = chatRoomsRepository.findById(chatRoomId);
         if (chatRoomsOptional.isEmpty()) {
