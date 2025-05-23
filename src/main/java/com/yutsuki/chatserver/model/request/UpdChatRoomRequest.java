@@ -13,7 +13,6 @@ import org.hibernate.validator.constraints.URL;
 @ToString
 public class UpdChatRoomRequest {
 
-
     @NotNull
     @Schema(
             example = "1",
@@ -24,7 +23,6 @@ public class UpdChatRoomRequest {
     @Size(min = 10,max = 255)
     @Schema(example = "group 1")
     private String title;
-
 
     @URL
     @Schema(

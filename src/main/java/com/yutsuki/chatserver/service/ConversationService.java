@@ -77,7 +77,7 @@ public class ConversationService {
         var pagination = request.pagination();
         var page = invitationsRepository.findAll(invitationsExample, pagination);
 
-        var responses = page.getContent().stream().map(InvitationsResponse::fromEntity).toList();
+        var responses = page.map(InvitationsResponse::fromEntity).toList();
         return ResultUtils.successList(responses, page.getTotalElements());
     }
 
