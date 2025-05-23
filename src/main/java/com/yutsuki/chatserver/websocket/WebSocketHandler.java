@@ -13,6 +13,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -27,7 +28,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
 
     @Override
-    public void afterConnectionEstablished( WebSocketSession session) throws Exception {
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         var principal = session.getPrincipal();
         if (principal == null || principal.getName() == null) {
             session.close(SERVER_ERROR.withReason("User must be authenticated"));
@@ -57,7 +58,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     }
 
     public <T> void push(WsResult<T> result, Long userId) {
-        var session = sessions.get(userId);
+        var session = sessions.get(String.valueOf(userId));
         log.debug("Push-[start] userId:{}", userId);
         if (session != null && session.isOpen()) {
             try {
@@ -69,6 +70,13 @@ public class WebSocketHandler extends TextWebSocketHandler {
             }
         } else {
             log.debug("Push-[no-session]. userId:{} ", userId);
+        }
+    }
+
+    public <T> void pushToGroup(WsResult<T> result, List<Long> userIds) {
+        log.debug("PushToGroup-[start] userIds:{}", userIds);
+        for (Long userId : userIds) {
+            push(result, userId);
         }
     }
 }
