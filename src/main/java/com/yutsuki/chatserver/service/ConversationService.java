@@ -81,7 +81,7 @@ public class ConversationService {
         return ResultUtils.successList(responses, page.getTotalElements());
     }
 
-    public Result<Void> updateInvitation(UpdInvitationRequest request, User user) throws BaseException {
+    public Result<Void> acceptInvitation(UpdInvitationRequest request, User user) throws BaseException {
         var invitationsOptional = invitationsRepository.findById(request.getInvitationId());
         if (invitationsOptional.isEmpty()) {
             log.warn("UpdateInvitation-[block].(invitation not found), request:{}", request);
